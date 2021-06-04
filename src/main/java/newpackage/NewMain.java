@@ -6,6 +6,8 @@
 package newpackage;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  *
@@ -20,7 +22,8 @@ public class NewMain {
         // TODO code application logic here
         login();
     }
-    public static void login(){
+
+    public static void login() {
         JFrame f = new JFrame("Login"); // instance of JFrame
         //create labels Username & Password
         JLabel l1, l2;
@@ -45,7 +48,7 @@ public class NewMain {
 
                 if ( username.equals("") ) {
                     JOptionPane.showMessageDialog(null, "Please enter user name!");
-                } else if ( password.euqals("") ) {
+                } else if ( password.equals("") ) {
                     JOptionPane.showMessageDialog(null, "Please enter password!");
                 } else {
                     Connection connection = connect(); // connect to database
@@ -59,9 +62,7 @@ public class NewMain {
                             System.out.println("User not found!");
                             JOptionPane.showMessageDialog(null, "Username or Password is incorrect!");
                         } else {
-                            // I don't understand where f comes from??
-                            // if dispose() is to clear things inside the txtfield then it's supposed to be tf_username.dispose()??
-                            f.dispose();
+                           f.dispose();
                             rs.beforeFirst(); // move the pointer above
                             while ( rs.next() ){
                                 String admin = rs.getString("Admin");
@@ -79,6 +80,16 @@ public class NewMain {
                 }
             }
         });
-    }
-    
+
+        f.add(tf_password);
+        f.add(login_btn);
+        f.add(tf_username);
+        f.add(l1);
+        f.add(l2);
+        f.setSize(400, 180);
+        f.setLayout(null);
+        f.setVisible(true);
+        f.setLocationRelativeTo(null);
+        
+    }    
 }
