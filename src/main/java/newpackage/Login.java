@@ -34,7 +34,7 @@ public class Login {
                 } else if ( password.equals("") ) {
                     JOptionPane.showMessageDialog(null, "Please enter password!");
                 } else {
-                    Connection connection = connect(); // connect to database
+                    Connection connection = MySQLConnection.connect(); // connect to database
                     try {
                         Statement statement = connection.createStatement();
                         statement.executeUpdate("Use Library"); //use database with the name "Library"
@@ -51,9 +51,9 @@ public class Login {
                                 String admin = rs.getString("Admin");
                                 String UID = rs.getString("UID");
                                 if ( admin.equals("1") ){
-                                    admin_menu();
+                                    // admin_menu();
                                 } else {
-                                    user_menu(UID);
+                                    // user_menu(UID);
                                 }
                             }
                         }
@@ -61,11 +61,7 @@ public class Login {
                         e.printStackTrace();
                     }
                 }
-            }
-
-            private newpackage.Connection connect() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
+            }      
         });
         f.add(tf_password);
         f.add(login_btn);
