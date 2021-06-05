@@ -1,28 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package newpackage;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 
-/**
- *
- * @author Admin
- */
-public class NewMain {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-        login();
-    }
-
+public class Login {
     public static void login() {
         JFrame f = new JFrame("Login"); // instance of JFrame
         //create labels Username & Password
@@ -44,8 +27,8 @@ public class NewMain {
             public void actionPerformed( ActionEvent event ) {
                 //store user input into Strings
                 String username = tf_username.getText();
-                String password = tf_password.getPassword();
-
+                String password = tf_password.getText();
+    
                 if ( username.equals("") ) {
                     JOptionPane.showMessageDialog(null, "Please enter user name!");
                 } else if ( password.equals("") ) {
@@ -57,12 +40,12 @@ public class NewMain {
                         statement.executeUpdate("Use Library"); //use database with the name "Library"
                         String str = ("SELECT * FROM users WHERE user_name = '" + username + "' AND password = '"+ password +"' "); //retrieve username & password from users database
                         ResultSet rs = statement.executeQuery(str);
-
+    
                         if ( rs.next() == false ) {
                             System.out.println("User not found!");
                             JOptionPane.showMessageDialog(null, "Username or Password is incorrect!");
                         } else {
-                           f.dispose();
+                        f.dispose();
                             rs.beforeFirst(); // move the pointer above
                             while ( rs.next() ){
                                 String admin = rs.getString("Admin");
@@ -79,8 +62,11 @@ public class NewMain {
                     }
                 }
             }
-        });
 
+            private newpackage.Connection connect() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
         f.add(tf_password);
         f.add(login_btn);
         f.add(tf_username);
@@ -90,6 +76,5 @@ public class NewMain {
         f.setLayout(null);
         f.setVisible(true);
         f.setLocationRelativeTo(null);
-        
     }    
 }
