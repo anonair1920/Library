@@ -37,8 +37,12 @@ public class Login {
                     Connection connection = MySQLConnection.connect(); // connect to database
                     try {
                         Statement statement = connection.createStatement();
-                        statement.executeUpdate("Use Library"); //use database with the name "Library"
-                        String str = ("SELECT * FROM users WHERE user_name = '" + username + "' AND password = '"+ password +"' "); //retrieve username & password from users database
+                        if(statement == null){
+                            JOptionPane.showMessageDialog(null, "Can't connect to MySQL!");
+                            return;
+                        }
+                        statement.executeUpdate("USE library"); //use database with the name "Library"
+                        String str = ("SELECT * FROM users WHERE name = '" + username + "' AND password = '"+ password +"' "); //retrieve username & password from users database
                         ResultSet rs = statement.executeQuery(str);
     
                         if ( rs.next() == false ) {

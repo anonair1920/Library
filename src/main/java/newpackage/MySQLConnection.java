@@ -9,7 +9,7 @@ public class MySQLConnection {
         try {
             name = "root";
             pass = "";
-            url = "jdbc:mysql://localost:3360/Library?useSSL=false";
+            url = "jdbc:mysql://localhost:3360/Library?useSSL=false";
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(url,name,pass);
             System.out.println("Database connected!"); 
@@ -17,6 +17,6 @@ public class MySQLConnection {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return connect();
+        return null;
     }
 }
