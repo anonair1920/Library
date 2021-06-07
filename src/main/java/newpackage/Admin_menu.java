@@ -16,7 +16,7 @@ import java.lang.Thread.State;
 
 public class Admin_menu {
     public static void admin_menu(){
-        JFrame f = new JFrame("Admin Funtions");
+        JFrame f = new JFrame("Admin Functions");
         // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JButton create_btn = new JButton("Create");
         create_btn.setBounds(450,60,120,25);
@@ -146,7 +146,7 @@ public class Admin_menu {
                         try {
                             Statement statement = connection.createStatement();
                             statement.executeUpdate("USE library");
-                            statement.executeUpdate("INSERT INTO users(name, password, type) VALUES('" + username + "','" + password + "'," + admin + ")");
+                            statement.executeUpdate("INSERT INTO users(name, password, admin) VALUES('" + username + "','" + password + "'," + admin + ");");
                             JOptionPane.showMessageDialog(null, "User added!");
                             g.dispose();
                         } catch ( SQLException e) {
@@ -175,34 +175,33 @@ public class Admin_menu {
                 JLabel l1, l2, l3;
                 l1 = new JLabel("Title");
                 l1.setBounds(30,15,100,30);
-                l2 = new JLabel("Genre");
+                l2 = new JLabel("Author");
                 l2.setBounds(30,53,100,30);
-                l3 = new JLabel("Price");
+                l3 = new JLabel("Published");
                 l3.setBounds(30,90,100,30);
                 JTextField tf_title = new JTextField();
                 tf_title.setBounds(110, 15, 200, 30);
-                JTextField tf_genre = new JTextField();
-                tf_genre.setBounds(110, 53, 200, 30);
-                JTextField tf_price = new JTextField();
-                tf_price.setBounds(110, 90, 200, 30);
+                JTextField tf_author = new JTextField();
+                tf_author.setBounds(110, 53, 200, 30);
+                JTextField tf_published = new JTextField();
+                tf_published.setBounds(110, 90, 200, 30);
 
                 JButton create_btn = new JButton("Submit");
                 create_btn.setBounds(130,130,80,25);
                 create_btn.addActionListener( new ActionListener() {
                     public void actionPerformed(ActionEvent event ){
-                        String title, genre, price;
+                        String title, author, published;
                         title = tf_title.getText();
-                        genre = tf_genre.getText();
-                        price = tf_price.getText();
-                        int price_int = Integer.parseInt(price);
-
+                        author = tf_author.getText();
+                        published = tf_published.getText();
+                        // int published_int = Integer.parseInt(published);
                         Connection connection = MySQLConnection.connect();
-
                         try {
                             Statement statement = connection.createStatement();
                             statement.executeUpdate("USE library");
-                            statement.executeUpdate("INSERT INTO books(title, genre, price) VALUES('" + title + "','" + genre + "'," + price_int + ")");
+                            statement.executeUpdate("INSERT INTO books(title, author, published) VALUES('" + title + "','" + author + "'," + published + ")");
                             JOptionPane.showMessageDialog(null, "Book added!");
+                            System.out.println("Added 1 book.");
                             g.dispose();
                         } catch ( SQLException e ) {
                             JOptionPane.showMessageDialog(null, e);
@@ -214,8 +213,8 @@ public class Admin_menu {
                 g.add(l1);
                 g.add(l2);
                 g.add(tf_title);
-                g.add(tf_genre);
-                g.add(tf_price);
+                g.add(tf_author);
+                g.add(tf_published);
                 g.setSize(350,200);
                 g.setLayout(null);
                 g.setVisible(true);
