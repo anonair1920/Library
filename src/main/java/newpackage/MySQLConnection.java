@@ -8,8 +8,8 @@ public class MySQLConnection {
         String name,pass,url;
         try {
             name = "root";
-            pass = "";
-            url = "jdbc:mysql://localhost:3360/Library?useSSL=false";
+            pass = "TNNgoan1412";
+            url = "jdbc:mysql://localhost:3307/library?useSSL=false";
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(url,name,pass);
             System.out.println("Database connected!"); 

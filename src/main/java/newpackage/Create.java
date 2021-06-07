@@ -17,10 +17,10 @@ public class Create {
                 }
             }
             Statement statement = connection.createStatement();
-            String database = "CREATE DATABASE library";
+            String database = "CREATE DATABASE Library";
             statement.executeUpdate(database);
             statement.executeUpdate("USE library");
-            String user_table = "CREATE TABLE users(id INT PRIMARY KEY, name VARCHAR(30), password VARCHAR(20))";
+            String user_table = "CREATE TABLE users(id INT PRIMARY KEY, name VARCHAR(30), password VARCHAR(2))";
         } catch (Exception e) {
             e.printStackTrace();
         }
