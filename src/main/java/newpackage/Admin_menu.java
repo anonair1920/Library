@@ -104,17 +104,19 @@ public class Admin_menu {
                     statement.executeUpdate("USE library");
                     statement = connection.createStatement();
                     ResultSet rs = statement.executeQuery(sql);
+                    // String getName, getTitle;
+                    // getName = "SELECT name FROM users WHERE id = " + rs.getString(2);
+                    // getTitle = "SELECT title FROM books WHERE id = " + rs.getString(3);
+                    // System.out.println(getName + getTitle);
                     DefaultTableModel model = new DefaultTableModel();
-                    model.addColumn("Name");
-                    model.addColumn("Title");
-                    model.addColumn("Return Date");
+                    model.addColumn("User ID");
+                    model.addColumn("Book ID");
+                    model.addColumn("Issued Date");
+                    model.addColumn("Period");
                     while ( rs.next() ){
-                        model.addRow(new Object[] {"Name", "Title", "2021-06-15"});
+                        model.addRow(new Object[] {rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)});
                     }
                     JTable book_list = new JTable(model);
-                 
-                    // book_list.setModel(DbUtils.resultSetToTableModel(rs));
-
                     JScrollPane scrollPane = new JScrollPane(book_list);
                     f.add(scrollPane);
                     f.setSize(800, 400);
