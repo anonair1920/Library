@@ -20,7 +20,11 @@ public class Create {
             String database = "CREATE DATABASE Library";
             statement.executeUpdate(database);
             statement.executeUpdate("USE library");
-            String user_table = "CREATE TABLE users(id INT PRIMARY KEY, name VARCHAR(30), password VARCHAR(2))";
+            String create_table_users = "CREATE TABLE users(id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, name VARCHAR(30) NOT NULL, password VARCHAR(2) NOT NULL)";
+            String create_table_books = "CREATE TABLE books(id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, title VARCHAR(50) NOT NULL, author VARCHAR(50), published YEAR);";
+            String create_table_issued = "CREATE TABLE issued();";
+            statement.executeUpdate(create_table_users);
+            statement.executeUpdate(create_table_books);
         } catch (Exception e) {
             e.printStackTrace();
         }

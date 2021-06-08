@@ -18,14 +18,15 @@ public class Admin_menu {
     public static void admin_menu(){
         JFrame f = new JFrame("Admin Functions");
         // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JButton create_btn = new JButton("Create");
+        JButton create_btn = new JButton("Reset Database");
         create_btn.setBounds(450,60,120,25);
         create_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event){
                 Create.create();
-                JOptionPane.showMessageDialog(null, "Database Created!");
+                JOptionPane.showMessageDialog(null, "New Database Created!");
             }
         });
+
         JButton view_btn = new JButton("View Lirary");
         view_btn.setBounds(20,20,120,25);
         view_btn.addActionListener(new ActionListener() {
@@ -54,7 +55,7 @@ public class Admin_menu {
             }
         });
         JButton users_btn = new JButton("View Users");
-        users_btn.setBounds(150,20,120,25);
+        users_btn.setBounds(20,60,120,25);
         users_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JFrame f = new JFrame("Users List");
@@ -80,7 +81,7 @@ public class Admin_menu {
             }
         });
         JButton issued_btn = new JButton("View Issued Books");
-        issued_btn.setBounds(280,20,160,25);
+        issued_btn.setBounds(280,60,160,25);
         issued_btn.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
                 JFrame f = new JFrame("Users List");
@@ -106,8 +107,9 @@ public class Admin_menu {
                 }
             }
         });
+        
         JButton add_user = new JButton("Add User");
-        add_user.setBounds(20,60,120,25);
+        add_user.setBounds(150,60,120,25);
         add_user.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event){
                 JFrame g = new JFrame("Enter User Details");
@@ -137,17 +139,16 @@ public class Admin_menu {
                         String username = tf_user.getText();
                         String password = tf_password.getText();
                         Boolean admin = false;
-                        
                         if (u1.isSelected()){
                             admin = true;
                         }
                         Connection connection = MySQLConnection.connect();
-
                         try {
                             Statement statement = connection.createStatement();
-                            statement.executeUpdate("USE library");
+                            statement.executeUpdate("USE library;");
                             statement.executeUpdate("INSERT INTO users(name, password, admin) VALUES('" + username + "','" + password + "'," + admin + ");");
                             JOptionPane.showMessageDialog(null, "User added!");
+                            System.out.println("Added new user!");
                             g.dispose();
                         } catch ( SQLException e) {
                             JOptionPane.showMessageDialog(null, e);
@@ -168,7 +169,7 @@ public class Admin_menu {
             }
         });
         JButton add_book = new JButton("Add Book");
-        add_book.setBounds(150,60,120,25);
+        add_book.setBounds(150,20,120,25);
         add_book.addActionListener( new ActionListener(){
             public void actionPerformed(ActionEvent event){
                 JFrame g = new JFrame("Enter Book Details");
@@ -201,7 +202,7 @@ public class Admin_menu {
                             statement.executeUpdate("USE library");
                             statement.executeUpdate("INSERT INTO books(title, author, published) VALUES('" + title + "','" + author + "'," + published + ")");
                             JOptionPane.showMessageDialog(null, "Book added!");
-                            System.out.println("Added 1 book.");
+                            System.out.println("Added new book!");
                             g.dispose();
                         } catch ( SQLException e ) {
                             JOptionPane.showMessageDialog(null, e);
@@ -222,7 +223,7 @@ public class Admin_menu {
             }
         });
         JButton issue_book = new JButton("Issue Book");
-        issue_book.setBounds(450,20,120,25);
+        issue_book.setBounds(280,20,160,25);
         issue_book.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent event){
                 JFrame g = new JFrame("Enter Details");
@@ -254,16 +255,14 @@ public class Admin_menu {
                         user_id = tf_user_id.getText();
                         period = tf_period_date.getText();
                         issued_date = tf_issued_date.getText();
-
                         int period_int = Integer.parseInt(period);
-
                         Connection connection = MySQLConnection.connect();
-
                         try {
                             Statement statement = connection.createStatement();
-                            statement.executeUpdate("USE library");
-                            statement.executeUpdate("INSERT INTO issued(user_id, book_id, issued_date, period) VALUES('" + user_id + "','" + book_id + "','" + issued_date + "'," + period_int + ")" );
+                            statement.executeUpdate("USE library;");
+                            statement.executeUpdate("INSERT INTO issued(user_id, book_id, issued_date, period) VALUES('" + user_id + "','" + book_id + "','" + issued_date + "'," + period_int + ");" );
                             JOptionPane.showMessageDialog(null, "Book Issued!");
+                            System.out.println("New Issue added!");
                             g.dispose();
                         } catch ( SQLException e ) {
                             JOptionPane.showMessageDialog(null, e);
@@ -286,7 +285,7 @@ public class Admin_menu {
             }
         });
         JButton return_book = new JButton("Return Book");
-        return_book.setBounds(280,60,160,25);
+        return_book.setBounds(450,20,120,25);
         return_book.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent event){
                 JFrame g = new JFrame("Enter Details");
