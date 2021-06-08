@@ -25,6 +25,8 @@ public class Create {
             String create_table_issued = "CREATE TABLE issued();";
             statement.executeUpdate(create_table_users);
             statement.executeUpdate(create_table_books);
+            statement.executeUpdate(create_table_issued);
+            resultSet.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

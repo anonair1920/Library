@@ -8,8 +8,9 @@ import javax.swing.*;
 
 import com.google.protobuf.TextFormat.ParseException;
 
-import newpackage.Main.ex;
 
+import newpackage.Main.ex;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.Thread.State;
@@ -41,7 +42,7 @@ public class Admin_menu {
                     statement = connection.createStatement();
                     ResultSet rs = statement.executeQuery(sql);
                     JTable book_list = new JTable();
-                    book_list.setModel(DbUtils.result.setToTableModel(rs));
+                    book_list.setModel(DbUtils.resultSetToTableModel(rs));
                
                     JScrollPane scrollPane = new JScrollPane(book_list);
                
@@ -93,11 +94,9 @@ public class Admin_menu {
                     statement.executeUpdate("USE library");
                     statement = connection.createStatement();
                     ResultSet rs = statement.executeQuery(sql);
-                    JTable book_list = new JTable();
+                    JTable book_list = new JTable(DbUtils.resultSetToTableModel(rs));
                     book_list.setModel(DbUtils.resultSetToTableModel(rs));
-                 
                     JScrollPane scrollPane = new JScrollPane(book_list);
-                  
                     f.add(scrollPane);
                     f.setSize(800, 400);
                     f.setVisible(true);
