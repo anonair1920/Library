@@ -341,21 +341,23 @@ public class Admin_menu {
                         try {
                             Statement statement = connection.createStatement();
                             statement.executeUpdate("USE library");
-                            String date1 = null;
+                            String date1 = "2021-05-30";
                             String date2 = return_date;
                             ResultSet rs = statement
                                     .executeQuery("SELECT issued_date FROM issued WHERE issue_id = " + issue_id);
-                            while (rs.next()) {
-                                date1 = rs.getString(1);
-                            }
+                            // while (rs.next()) {
+                            //     date1 = rs.getString(1);
+                            // }
                             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                             LocalDate d1 = LocalDate.parse(date1, dtf);
-                            LocalDate d2 = LocalDate.parse(date2, dtf);                             
-                            long dif = Duration.between(d1, d2).toDays();
+                            LocalDate d2 = LocalDate.parse(date2, dtf);       
+                            //code not working from here                      
+                            long dif = Duration.between(d1.atStartOfDay(), d2.atStartOfDay()).toDays();
+                            System.out.println("Passed here!");
                             System.out.println(dif);
                             ex.days = (int) (TimeUnit.DAYS.convert(dif, TimeUnit.DAYS));
                             statement.executeUpdate(
-                                    "UPDATE issued SET return_date='" + return_date + "' WHERE issue_id=" + issue_id);
+                                    "UPDATE issued SET return_date='" + return_date + "' WHERE issue_id=" + issue_id + ";");
                             g.dispose();
                             Connection connection1 = MySQLConnection.connect();
                             Statement statement1 = connection1.createStatement();
