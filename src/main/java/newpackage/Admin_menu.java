@@ -2,6 +2,10 @@ package newpackage;
 
 import java.sql.*;
 import java.text.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.*;
@@ -337,21 +341,19 @@ public class Admin_menu {
                         try {
                             Statement statement = connection.createStatement();
                             statement.executeUpdate("USE library");
-                            String date1, date2;
-                            date2 = return_date;
+                            String date1 = null;
+                            String date2 = return_date;
                             ResultSet rs = statement
                                     .executeQuery("SELECT issued_date FROM issued WHERE issue_id = " + issue_id);
                             while (rs.next()) {
                                 date1 = rs.getString(1);
                             }
-                            try {
-                                Date date_1 = new SimpleDateFormat("dd-MM-yyyy").parse(date1);
-                                Date date_2 = new SimpleDateFormat("dd-MM-yyyy").parse(date2);
-                                long diff = date_2.getTime() - date_1.getTime();
-                                ex.days = (int) (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
+                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            LocalDate d1 = LocalDate.parse(date1, dtf);
+                            LocalDate d2 = LocalDate.parse(date2, dtf);                             
+                            long dif = Duration.between(d1, d2).toDays();
+                            System.out.println(dif);
+                            ex.days = (int) (TimeUnit.DAYS.convert(dif, TimeUnit.DAYS));
                             statement.executeUpdate(
                                     "UPDATE issued SET return_date='" + return_date + "' WHERE issue_id=" + issue_id);
                             g.dispose();
@@ -364,7 +366,7 @@ public class Admin_menu {
                             while (rs1.next()) {
                                 diff = rs1.getString(1);
                             }
-                            int diff_int = Integer.parseInt(diff);
+                            // int diff_int = Integer.parseInt(diff);
                             // Calculate fine
                             // if ( ex.days&amp;gt;diff_int ) {
                             // int fine = (ex.days-diff_int)*10;
