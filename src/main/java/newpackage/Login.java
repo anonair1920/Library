@@ -7,28 +7,23 @@ import javax.swing.*;
 
 public class Login {
     public static void login() {
-        JFrame f = new JFrame("Login"); // instance of JFrame
-        // create labels Username & Password
+        JFrame f = new JFrame("Login");
         JLabel l1, l2;
         l1 = new JLabel("User name");
         l1.setBounds(30, 15, 100, 30); // x,y,width,height
         l2 = new JLabel("Password");
         l2.setBounds(30, 50, 100, 30);
-        // create txt fields for username & password
         JTextField tf_username = new JTextField();
         tf_username.setBounds(110, 15, 200, 30);
         JPasswordField tf_password = new JPasswordField();
         tf_password.setBounds(110, 50, 200, 30);
-        // create button
         JButton login_btn = new JButton("Login");
         login_btn.setBounds(130, 90, 80, 25);
         login_btn.addActionListener(new ActionListener() {
-            // function performs action login
+
             public void actionPerformed(ActionEvent event) {
-                // store user input into Strings
                 String username = tf_username.getText();
                 String password = tf_password.getText();
-
                 if (username.equals("")) {
                     JOptionPane.showMessageDialog(null, "Please enter user name!");
                 } else if (password.equals("")) {
@@ -52,8 +47,6 @@ public class Login {
                         } else {
                             JOptionPane.showMessageDialog(null, "Welcome to Library!");
                             f.dispose();
-                            // below is error temporarily skipped
-                            // rs.beforeFirst(); // move the pointer above                    
                             rs = statement.executeQuery(str);
                             while (rs.next()) {
                                 String admin = rs.getString("admin");

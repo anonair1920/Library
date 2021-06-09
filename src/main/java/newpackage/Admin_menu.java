@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 public class Admin_menu {
     public static void admin_menu() {
         JFrame f = new JFrame("Admin Functions");
+
         // Reset Db
         JButton create_btn = new JButton("Reset Database");
         create_btn.setBounds(450, 60, 120, 25);
@@ -25,15 +26,17 @@ public class Admin_menu {
                 JOptionPane.showMessageDialog(null, "New Database Created!");
             }
         });
+
         // View all books
         JButton view_btn = new JButton("View Lirary");
         view_btn.setBounds(20, 20, 120, 25);
         view_btn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
+ 
+            public void actionPerformed(ActionEvent event) { 
                 JFrame f = new JFrame("Books Available");
-                // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 Connection connection = MySQLConnection.connect();
                 String sql = "SELECT * FROM books";
+
                 try {
                     Statement statement = connection.createStatement();
                     statement.executeUpdate("USE library");
@@ -51,8 +54,9 @@ public class Admin_menu {
                     }
                     JTable book_list = new JTable(model);
                     JScrollPane scrollPane = new JScrollPane(book_list);
+  
                     f.add(scrollPane);
-                    f.setSize(800, 400);
+                    f.setSize(1200, 400);
                     f.setVisible(true);
                     f.setLocationRelativeTo(null);
                 } catch (SQLException e) {
@@ -60,14 +64,17 @@ public class Admin_menu {
                 }
             }
         });
+
         // View all users
         JButton users_btn = new JButton("View Users");
         users_btn.setBounds(20, 60, 120, 25);
         users_btn.addActionListener(new ActionListener() {
+ 
             public void actionPerformed(ActionEvent event) {
                 JFrame f = new JFrame("Users List");
                 Connection connection = MySQLConnection.connect();
                 String sql = "SELECT * FROM users";
+   
                 try {
                     Statement statement = connection.createStatement();
                     statement.executeUpdate("USE library");
@@ -78,11 +85,13 @@ public class Admin_menu {
                     model.addColumn("User ID");
                     model.addColumn("Name");
                     model.addColumn("Email");
+   
                     while (rs.next()) {
                         model.addRow(new Object[] { rs.getString(1), rs.getString(2), rs.getString(3) });
                     }
                     JTable users_list = new JTable(model);
                     JScrollPane scrollPane = new JScrollPane(users_list);
+
                     f.add(scrollPane);
                     f.setSize(800, 400);
                     f.setVisible(true);
@@ -92,15 +101,17 @@ public class Admin_menu {
                 }
             }
         });
+     
         // View all issue books
         JButton issued_btn = new JButton("View Issued Books");
         issued_btn.setBounds(280, 60, 160, 25);
         issued_btn.addActionListener(new ActionListener() {
+      
             public void actionPerformed(ActionEvent event) {
                 JFrame f = new JFrame("Issued Books");
                 // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 Connection connection = MySQLConnection.connect();
-                String sql = " SELECT DISTINCT issued.*, users.name, books.title FROM issued, users, books WHERE ((issued.user_id = users.id) AND (issued.book_id = books.id));";
+                String sql = "SELECT DISTINCT issued.*, users.name, books.title FROM issued, users, books WHERE ((issued.user_id = users.id) AND (issued.book_id = books.id));";
 
                 try {
                     Statement statement = connection.createStatement();
@@ -109,19 +120,21 @@ public class Admin_menu {
                     ResultSet rs = statement.executeQuery(sql);
 
                     DefaultTableModel model = new DefaultTableModel();
-                    model.addColumn("Issue ID");
-                    model.addColumn("User Name");
-                    model.addColumn("Book Title");
-                    model.addColumn("Issued Date");
-                    model.addColumn("Period");
+                    model.addColumn("Issue ID"); //1
+                    model.addColumn("User Name"); //7
+                    model.addColumn("Book Title"); //8
+                    model.addColumn("Issued Date"); //4
+                    model.addColumn("Period"); //5
+                    model.addColumn("Return Date"); //6
+               
                     while (rs.next()) {
-                        model.addRow(new Object[] { rs.getString(1), rs.getString(6), rs.getString(7), rs.getString(4),
-                                rs.getString(5) });
+                        model.addRow(new Object[] { rs.getString(1), rs.getString(7), rs.getString(8),rs.getString(4), rs.getString(5), rs.getString(6)});
                     }
                     JTable book_list = new JTable(model);
                     JScrollPane scrollPane = new JScrollPane(book_list);
+                
                     f.add(scrollPane);
-                    f.setSize(800, 400);
+                    f.setSize(1200, 400);
                     f.setVisible(true);
                     f.setLocationRelativeTo(null);
                 } catch (SQLException e) {
@@ -129,10 +142,12 @@ public class Admin_menu {
                 }
             }
         });
+   
         // Add user
         JButton add_user = new JButton("Add User");
         add_user.setBounds(150, 60, 120, 25);
         add_user.addActionListener(new ActionListener() {
+        
             public void actionPerformed(ActionEvent event) {
                 JFrame g = new JFrame("Enter User Details");
                 // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -153,10 +168,10 @@ public class Admin_menu {
                 ButtonGroup btngr = new ButtonGroup();
                 btngr.add(u1);
                 btngr.add(u2);
-
                 JButton create_btn = new JButton("CREATE");
                 create_btn.setBounds(130, 130, 80, 25);
                 create_btn.addActionListener(new ActionListener() {
+              
                     public void actionPerformed(ActionEvent event) {
                         String username = tf_user.getText();
                         String password = tf_password.getText();
@@ -165,6 +180,7 @@ public class Admin_menu {
                             admin = true;
                         }
                         Connection connection = MySQLConnection.connect();
+                      
                         try {
                             Statement statement = connection.createStatement();
                             statement.executeUpdate("USE library;");
@@ -178,6 +194,7 @@ public class Admin_menu {
                         }
                     }
                 });
+              
                 g.add(create_btn);
                 g.add(u2);
                 g.add(u1);
@@ -191,10 +208,12 @@ public class Admin_menu {
                 g.setLocationRelativeTo(null);
             }
         });
+    
         // Add Books
         JButton add_book = new JButton("Add Book");
         add_book.setBounds(150, 20, 120, 25);
         add_book.addActionListener(new ActionListener() {
+  
             public void actionPerformed(ActionEvent event) {
                 JFrame g = new JFrame("Enter Book Details");
                 JLabel l1, l2, l3;
@@ -210,10 +229,10 @@ public class Admin_menu {
                 tf_author.setBounds(110, 53, 200, 30);
                 JTextField tf_published = new JTextField();
                 tf_published.setBounds(110, 90, 200, 30);
-
                 JButton create_btn = new JButton("Submit");
                 create_btn.setBounds(130, 130, 80, 25);
                 create_btn.addActionListener(new ActionListener() {
+ 
                     public void actionPerformed(ActionEvent event) {
                         String title, author, published;
                         title = tf_title.getText();
@@ -222,6 +241,7 @@ public class Admin_menu {
                         // int published_int = Integer.parseInt(published);
                         System.out.println(published);
                         Connection connection = MySQLConnection.connect();
+                    
                         try {
                             Statement statement = connection.createStatement();
                             statement.executeUpdate("USE library");
@@ -235,6 +255,7 @@ public class Admin_menu {
                         }
                     }
                 });
+               
                 g.add(l3);
                 g.add(create_btn);
                 g.add(l1);
@@ -248,10 +269,12 @@ public class Admin_menu {
                 g.setLocationRelativeTo(null);
             }
         });
+    
         // Issue a book
         JButton issue_book = new JButton("Issue Book");
         issue_book.setBounds(280, 20, 160, 25);
         issue_book.addActionListener(new ActionListener() {
+       
             public void actionPerformed(ActionEvent event) {
                 JFrame g = new JFrame("Enter Details");
                 // g.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -276,6 +299,7 @@ public class Admin_menu {
                 JButton create_btn = new JButton("Submit");
                 create_btn.setBounds(130, 170, 80, 25);
                 create_btn.addActionListener(new ActionListener() {
+               
                     public void actionPerformed(ActionEvent event) {
                         String book_id, user_id, period, issued_date;
                         book_id = tf_book_id.getText();
@@ -284,6 +308,7 @@ public class Admin_menu {
                         issued_date = tf_issued_date.getText();
                         int period_int = Integer.parseInt(period);
                         Connection connection = MySQLConnection.connect();
+                      
                         try {
                             Statement statement = connection.createStatement();
                             statement.executeUpdate("USE library;");
@@ -297,6 +322,7 @@ public class Admin_menu {
                         }
                     }
                 });
+               
                 g.add(l3);
                 g.add(l4);
                 g.add(create_btn);
@@ -312,10 +338,12 @@ public class Admin_menu {
                 g.setLocationRelativeTo(null);
             }
         });
+      
         // Return a book
         JButton return_book = new JButton("Return Book");
         return_book.setBounds(450, 20, 120, 25);
         return_book.addActionListener(new ActionListener() {
+          
             public void actionPerformed(ActionEvent event) {
                 JFrame g = new JFrame("Enter Details");
                 JLabel l1, l2;
@@ -330,6 +358,7 @@ public class Admin_menu {
                 JButton return_btn = new JButton("Return");
                 return_btn.setBounds(130, 170, 80, 25);
                 return_btn.addActionListener(new ActionListener() {
+                 
                     public void actionPerformed(ActionEvent event) {
                         String issue_id, return_date;
                         issue_id = tf_issue_id.getText();
@@ -368,12 +397,11 @@ public class Admin_menu {
                                 int dif_int = (int) dif;
                                 if (period_int < dif_int) {
                                     int fine = (dif_int - period_int) * 2;
-                                    JOptionPane.showMessageDialog(null, "Fine: $" + fine);
+                                    JOptionPane.showMessageDialog(null, "Fine:   $" + fine);
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Book returned!");
                                 }
                             }
-
                             // int diff_int = Integer.parseInt(diff);
                             // Calculate fine
                             // if ( ex.days&amp;gt;diff_int ) {
@@ -383,12 +411,12 @@ public class Admin_menu {
                             // String fine_str = ("Fine: " + fine);
                             // JOptionPane.showMessageDialog(null, fine_str);
                             // }
-
                         } catch (SQLException e) {
                             JOptionPane.showMessageDialog(null, e);
                         }
                     }
                 });
+              
                 g.add(l2);
                 g.add(return_btn);
                 g.add(l1);
