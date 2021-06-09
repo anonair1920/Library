@@ -1,29 +1,22 @@
 package newpackage;
 
 import java.sql.*;
-import java.text.*;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.*;
 
-import com.google.protobuf.TextFormat.ParseException;
-
-import org.apache.commons.dbutils.DbUtils;
-
 import newpackage.Main.ex;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.Thread.State;
 
 public class Admin_menu {
     public static void admin_menu() {
         JFrame f = new JFrame("Admin Functions");
-        // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Reset Db
         JButton create_btn = new JButton("Reset Database");
         create_btn.setBounds(450, 60, 120, 25);
         create_btn.addActionListener(new ActionListener() {
@@ -32,7 +25,7 @@ public class Admin_menu {
                 JOptionPane.showMessageDialog(null, "New Database Created!");
             }
         });
-
+        // View all books
         JButton view_btn = new JButton("View Lirary");
         view_btn.setBounds(20, 20, 120, 25);
         view_btn.addActionListener(new ActionListener() {
@@ -53,7 +46,8 @@ public class Admin_menu {
                     model.addColumn("Author");
                     model.addColumn("Published");
                     while (rs.next()) {
-                        model.addRow(new Object[] {rs.getString(1),rs.getString(2), rs.getString(3), rs.getString(4)});
+                        model.addRow(
+                                new Object[] { rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4) });
                     }
                     JTable book_list = new JTable(model);
                     JScrollPane scrollPane = new JScrollPane(book_list);
@@ -66,6 +60,7 @@ public class Admin_menu {
                 }
             }
         });
+        // View all users
         JButton users_btn = new JButton("View Users");
         users_btn.setBounds(20, 60, 120, 25);
         users_btn.addActionListener(new ActionListener() {
@@ -83,8 +78,8 @@ public class Admin_menu {
                     model.addColumn("User ID");
                     model.addColumn("Name");
                     model.addColumn("Email");
-                    while ( rs.next() ){
-                        model.addRow(new Object[] { rs.getString(1), rs.getString(2), rs.getString(3)});
+                    while (rs.next()) {
+                        model.addRow(new Object[] { rs.getString(1), rs.getString(2), rs.getString(3) });
                     }
                     JTable users_list = new JTable(model);
                     JScrollPane scrollPane = new JScrollPane(users_list);
@@ -97,6 +92,7 @@ public class Admin_menu {
                 }
             }
         });
+        // View all issue books
         JButton issued_btn = new JButton("View Issued Books");
         issued_btn.setBounds(280, 60, 160, 25);
         issued_btn.addActionListener(new ActionListener() {
@@ -111,15 +107,16 @@ public class Admin_menu {
                     statement.executeUpdate("USE library");
                     statement = connection.createStatement();
                     ResultSet rs = statement.executeQuery(sql);
-                   
+
                     DefaultTableModel model = new DefaultTableModel();
                     model.addColumn("Issue ID");
                     model.addColumn("User Name");
                     model.addColumn("Book Title");
                     model.addColumn("Issued Date");
                     model.addColumn("Period");
-                    while ( rs.next() ){
-                        model.addRow(new Object[] {rs.getString(1), rs.getString(6), rs.getString(7), rs.getString(4), rs.getString(5)});
+                    while (rs.next()) {
+                        model.addRow(new Object[] { rs.getString(1), rs.getString(6), rs.getString(7), rs.getString(4),
+                                rs.getString(5) });
                     }
                     JTable book_list = new JTable(model);
                     JScrollPane scrollPane = new JScrollPane(book_list);
@@ -132,7 +129,7 @@ public class Admin_menu {
                 }
             }
         });
-
+        // Add user
         JButton add_user = new JButton("Add User");
         add_user.setBounds(150, 60, 120, 25);
         add_user.addActionListener(new ActionListener() {
@@ -194,6 +191,7 @@ public class Admin_menu {
                 g.setLocationRelativeTo(null);
             }
         });
+        // Add Books
         JButton add_book = new JButton("Add Book");
         add_book.setBounds(150, 20, 120, 25);
         add_book.addActionListener(new ActionListener() {
@@ -250,6 +248,7 @@ public class Admin_menu {
                 g.setLocationRelativeTo(null);
             }
         });
+        // Issue a book
         JButton issue_book = new JButton("Issue Book");
         issue_book.setBounds(280, 20, 160, 25);
         issue_book.addActionListener(new ActionListener() {
@@ -313,12 +312,12 @@ public class Admin_menu {
                 g.setLocationRelativeTo(null);
             }
         });
+        // Return a book
         JButton return_book = new JButton("Return Book");
         return_book.setBounds(450, 20, 120, 25);
         return_book.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JFrame g = new JFrame("Enter Details");
-                // g.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 JLabel l1, l2;
                 l1 = new JLabel("Issue ID");
                 l1.setBounds(30, 15, 100, 30);
@@ -341,43 +340,50 @@ public class Admin_menu {
                         try {
                             Statement statement = connection.createStatement();
                             statement.executeUpdate("USE library");
-                            String date1 = "2021-05-30";
+                            String date1 = "";
                             String date2 = return_date;
                             ResultSet rs = statement
                                     .executeQuery("SELECT issued_date FROM issued WHERE issue_id = " + issue_id);
-                            // while (rs.next()) {
-                            //     date1 = rs.getString(1);
-                            // }
+                            while (rs.next()) {
+                                date1 = rs.getString(1);
+                            }
                             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                             LocalDate d1 = LocalDate.parse(date1, dtf);
-                            LocalDate d2 = LocalDate.parse(date2, dtf);       
-                            //code not working from here                      
+                            LocalDate d2 = LocalDate.parse(date2, dtf);
                             long dif = Duration.between(d1.atStartOfDay(), d2.atStartOfDay()).toDays();
-                            System.out.println("Passed here!");
                             System.out.println(dif);
                             ex.days = (int) (TimeUnit.DAYS.convert(dif, TimeUnit.DAYS));
-                            statement.executeUpdate(
-                                    "UPDATE issued SET return_date='" + return_date + "' WHERE issue_id=" + issue_id + ";");
+                            statement.executeUpdate("UPDATE issued SET return_date='" + return_date
+                                    + "' WHERE issue_id=" + issue_id + ";");
                             g.dispose();
                             Connection connection1 = MySQLConnection.connect();
                             Statement statement1 = connection1.createStatement();
                             statement1.executeUpdate("USE library");
                             ResultSet rs1 = statement1
-                                    .executeQuery("SELECT period FROM issued WHERE issue_id=" + issue_id);
-                            String diff;
+                                    .executeQuery("SELECT period FROM issued WHERE issue_id=" + issue_id + ";");
+                            String period;
                             while (rs1.next()) {
-                                diff = rs1.getString(1);
+                                period = rs1.getString(1);
+                                int period_int = Integer.parseInt(period);
+                                int dif_int = (int) dif;
+                                if (period_int < dif_int) {
+                                    int fine = (dif_int - period_int) * 2;
+                                    JOptionPane.showMessageDialog(null, "Fine: $" + fine);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Book returned!");
+                                }
                             }
+
                             // int diff_int = Integer.parseInt(diff);
                             // Calculate fine
                             // if ( ex.days&amp;gt;diff_int ) {
                             // int fine = (ex.days-diff_int)*10;
                             // statement1.executeUpdate("UPDATE issued SET fine = " + fine + "WHERE issue_id
                             // = " + issue_id );
-                            // String fine_str = ("Fine: Rs. " + fine);
+                            // String fine_str = ("Fine: " + fine);
                             // JOptionPane.showMessageDialog(null, fine_str);
                             // }
-                            JOptionPane.showMessageDialog(null, "Book returned!");
+
                         } catch (SQLException e) {
                             JOptionPane.showMessageDialog(null, e);
                         }
