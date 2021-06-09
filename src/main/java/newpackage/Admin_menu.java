@@ -42,8 +42,9 @@ public class Admin_menu {
                     statement.executeUpdate("USE library");
                     statement = connection.createStatement();
                     ResultSet rs = statement.executeQuery(sql);
+
                     DefaultTableModel model = new DefaultTableModel();
-                    model.addColumn("ID");
+                    model.addColumn("Book ID");
                     model.addColumn("Title");
                     model.addColumn("Author");
                     model.addColumn("Published");
@@ -73,8 +74,9 @@ public class Admin_menu {
                     statement.executeUpdate("USE library");
                     statement = connection.createStatement();
                     ResultSet rs = statement.executeQuery(sql);
+
                     DefaultTableModel model = new DefaultTableModel();
-                    model.addColumn("ID");
+                    model.addColumn("User ID");
                     model.addColumn("Name");
                     model.addColumn("Email");
                     while ( rs.next() ){
@@ -95,26 +97,25 @@ public class Admin_menu {
         issued_btn.setBounds(280, 60, 160, 25);
         issued_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                JFrame f = new JFrame("Users List");
+                JFrame f = new JFrame("Issued Books");
                 // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 Connection connection = MySQLConnection.connect();
-                String sql = "SELECT * FROM issued";
+                String sql = " SELECT DISTINCT issued.*, users.name, books.title FROM issued, users, books WHERE ((issued.user_id = users.id) AND (issued.book_id = books.id));";
+
                 try {
                     Statement statement = connection.createStatement();
                     statement.executeUpdate("USE library");
                     statement = connection.createStatement();
                     ResultSet rs = statement.executeQuery(sql);
-                    // String getName, getTitle;
-                    // getName = "SELECT name FROM users WHERE id = " + rs.getString(2);
-                    // getTitle = "SELECT title FROM books WHERE id = " + rs.getString(3);
-                    // System.out.println(getName + getTitle);
+                   
                     DefaultTableModel model = new DefaultTableModel();
-                    model.addColumn("User ID");
-                    model.addColumn("Book ID");
+                    model.addColumn("Issue ID");
+                    model.addColumn("User Name");
+                    model.addColumn("Book Title");
                     model.addColumn("Issued Date");
                     model.addColumn("Period");
                     while ( rs.next() ){
-                        model.addRow(new Object[] {rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)});
+                        model.addRow(new Object[] {rs.getString(1), rs.getString(6), rs.getString(7), rs.getString(4), rs.getString(5)});
                     }
                     JTable book_list = new JTable(model);
                     JScrollPane scrollPane = new JScrollPane(book_list);
@@ -217,12 +218,13 @@ public class Admin_menu {
                         author = tf_author.getText();
                         published = tf_published.getText();
                         // int published_int = Integer.parseInt(published);
+                        System.out.println(published);
                         Connection connection = MySQLConnection.connect();
                         try {
                             Statement statement = connection.createStatement();
                             statement.executeUpdate("USE library");
                             statement.executeUpdate("INSERT INTO books(title, author, published) VALUES('" + title
-                                    + "','" + author + "'," + published + ")");
+                                    + "','" + author + "','" + published + "');");
                             JOptionPane.showMessageDialog(null, "Book added!");
                             System.out.println("Added new book!");
                             g.dispose();
