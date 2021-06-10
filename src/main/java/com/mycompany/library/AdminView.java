@@ -35,4 +35,8 @@ public class AdminView {
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
     }
+
+    public static void logout(){
+        
+    }
 }
