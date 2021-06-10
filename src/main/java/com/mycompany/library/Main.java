@@ -90,4 +90,8 @@ public class Main {
         return null;
     }
 
+    public static void logout(){
+        login();
+    }
+
 }

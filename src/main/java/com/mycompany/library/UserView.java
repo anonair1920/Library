@@ -1,6 +1,8 @@
 package com.mycompany.library;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class UserView {
     public static void main(String userID) {
@@ -23,6 +25,12 @@ public class UserView {
         returnBook.setBounds(285, 60, 140, 25);
         logout.setBounds(435, 60, 120, 25);
 
+        logout.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent event){
+                frame.dispose();
+                Main.login();
+            }
+        });
         // Search book, author, genre
 
         // Add book
