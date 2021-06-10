@@ -10,6 +10,7 @@ import java.sql.*;
 public class AdminView {
     public static void main() {
         JFrame frame = new JFrame("Admin View");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JButton view = new JButton("View Users");
         JButton add = new JButton("Add User");
         JButton update = new JButton("Update User");
@@ -19,6 +20,7 @@ public class AdminView {
         view.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JFrame frame = new JFrame("Users List");
+                // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 Connection connection = Main.connect();
                 String query = "SELECT * FROM users WHERE admin = 1;";
                 try {
@@ -62,14 +64,14 @@ public class AdminView {
                 JTextField mail = new JTextField();
                 mail.setBounds(110, 85, 200, 30);
                 JRadioButton u1 = new JRadioButton("Admin");
-                u1.setBounds(55, 80, 200, 30);
+                u1.setBounds(55, 115, 200, 30);
                 JRadioButton u2 = new JRadioButton("User");
-                u2.setBounds(130, 80, 200, 30);
+                u2.setBounds(110, 110, 200, 30);
                 ButtonGroup btngr = new ButtonGroup();
                 btngr.add(u1);
                 btngr.add(u2);
                 JButton btn = new JButton("CREATE");
-                btn.setBounds(130, 130, 80, 25);
+                btn.setBounds(130, 195, 80, 25);
                 btn.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent event) {
                         String username = user.getText();
@@ -82,9 +84,8 @@ public class AdminView {
                         Connection connection = Main.connect();
                         try {
                             Statement statement = connection.createStatement();
-                            statement.executeUpdate("USE library;");
-                            statement.executeUpdate("INSERT INTO users(username, password, email, admin) VALUES('" + username
-                                    + "','" + password + "','"+email+"'," + admin + ");");
+                            statement.executeUpdate("USE lib;");
+                            statement.executeUpdate("INSERT INTO users(username, password, email, admin) VALUES('"+username+"','"+password+"','"+email+"',"+admin+");");
                             JOptionPane.showMessageDialog(null, "User added!");
                             System.out.println("Added new user!");
                             frame.dispose();
@@ -93,6 +94,19 @@ public class AdminView {
                         }
                     }
                 });
+                frame.add(l1);
+                frame.add(l2);
+                frame.add(l3);
+                frame.add(u1);
+                frame.add(u2);
+                frame.add(user);
+                frame.add(pass);
+                frame.add(mail);
+                frame.add(btn);
+                frame.setSize(355, 280);
+                frame.setLayout(null);
+                frame.setVisible(true);
+                frame.setLocationRelativeTo(null);
             }
         });
         add.setBounds(20, 60, 120, 25);
@@ -106,7 +120,7 @@ public class AdminView {
                     Statement statement = connection.createStatement();
                     statement.executeUpdate("USE library"); // use database with the name
                     frame.dispose();
-                } catch (SQLException e){
+                } catch (SQLException e) {
                     JOptionPane.showMessageDialog(null, e);
                 }
             }
