@@ -5,7 +5,6 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.Thread.State;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,8 +23,8 @@ public class UserView {
         JButton returnBook = new JButton("Return Book");
         JButton logout = new JButton("Log out");
         all.setBounds(25, 20, 120, 25);
-        all.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent event){
+        all.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
                 JFrame frame = new JFrame("Library");
                 Connection connection = Main.connect();
                 try {
@@ -41,8 +40,10 @@ public class UserView {
                     model.addColumn("Language");
                     model.addColumn("Pages");
                     model.addColumn("Quantity");
-                    while( result.next() ){
-                        model.addRow( new Object[] { result.getString(1),result.getString(2),result.getString(3),result.getString(4),result.getString(5),result.getString(6),result.getString(7),result.getString(8)});
+                    while (result.next()) {
+                        model.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3),
+                                result.getString(4), result.getString(5), result.getString(6), result.getString(7),
+                                result.getString(8) });
                     }
                     JTable tb = new JTable(model);
                     JScrollPane sp = new JScrollPane(tb);
@@ -50,8 +51,8 @@ public class UserView {
                     frame.setSize(1200, 500);
                     frame.setVisible(true);
                     frame.setLocationRelativeTo(null);
-                } catch (SQLException e){
-                    JOptionPane.showMessageDialog(null,e);
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(null, e);
                 }
             }
         });
@@ -138,6 +139,70 @@ public class UserView {
         available.setBounds(285, 20, 140, 25);
         update.setBounds(435, 20, 120, 25);
         issue.setBounds(155, 60, 120, 25);
+        issue.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                JFrame frame = new JFrame("Issue a book");
+                JLabel l1 = new JLabel("Student Name");
+                JLabel l2 = new JLabel("Student ID");
+                JLabel l3 = new JLabel("Book ID");
+                JLabel l4 = new JLabel("Date");
+                JLabel l5 = new JLabel("Period");
+                JTextField t1 = new JTextField();
+                JTextField t2 = new JTextField();
+                JTextField t3 = new JTextField();
+                JTextField t4 = new JTextField();
+                JTextField t5 = new JTextField();
+                JButton button = new JButton("ISSUE");
+                l1.setBounds(30, 30, 100, 25);
+                l2.setBounds(30, 70, 100, 25);
+                l3.setBounds(30, 110, 100, 25);
+                l4.setBounds(30, 150, 100, 25);
+                l5.setBounds(30, 190, 100, 25);
+                t1.setBounds(130, 30, 200, 25);
+                t2.setBounds(130, 70, 200, 25);
+                t3.setBounds(130, 110, 200, 25);
+                t4.setBounds(130, 150, 200, 25);
+                t5.setBounds(130, 190, 200, 25);
+                button.setBounds(150, 235, 80, 25);
+                button.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent event) {
+                        String s1 = t1.getText();
+                        String s2 = t2.getText();
+                        String s3 = t3.getText();
+                        String s4 = t4.getText();
+                        String s5 = t5.getText();
+                        Connection connection = Main.connect();
+                        String query = "INSERT INTO issued(studentName, studentID, bookID, issuedDate, period) VALUES('"
+                                + s1 + "'," + s2 + "," + s3 + ",'" + s4 + "'," + s5 + ");";
+                        try {
+                            Statement statement = connection.createStatement();
+                            statement.executeUpdate("USE lib;");
+                            statement.executeUpdate(query);
+                            JOptionPane.showMessageDialog(null, "Book is issued!");
+                            System.out.println("issued");
+                            frame.dispose();
+                        } catch (SQLException e) {
+                            JOptionPane.showMessageDialog(null, e);
+                        }
+                    }
+                });
+                frame.add(l1);
+                frame.add(l2);
+                frame.add(l3);
+                frame.add(l4);
+                frame.add(l5);
+                frame.add(t1);
+                frame.add(t2);
+                frame.add(t3);
+                frame.add(t4);
+                frame.add(t5);
+                frame.add(button);
+                frame.setSize(380, 330);
+                frame.setLayout(null);
+                frame.setVisible(true);
+                frame.setLocationRelativeTo(null);
+            }
+        });
         issued.setBounds(155, 20, 120, 25);
         returnBook.setBounds(285, 60, 140, 25);
         logout.setBounds(435, 60, 120, 25);
