@@ -1,9 +1,13 @@
 package com.mycompany.library;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.Thread.State;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -20,6 +24,37 @@ public class UserView {
         JButton returnBook = new JButton("Return Book");
         JButton logout = new JButton("Log out");
         all.setBounds(25, 20, 120, 25);
+        all.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+                JFrame frame = new JFrame("Library");
+                Connection connection = Main.connect();
+                try {
+                    Statement statement = connection.createStatement();
+                    statement.executeUpdate("USE lib;");
+                    ResultSet result = statement.executeQuery("SELECT * FROM books;");
+                    DefaultTableModel model = new DefaultTableModel();
+                    model.addColumn("ID");
+                    model.addColumn("Title");
+                    model.addColumn("Author");
+                    model.addColumn("Genre");
+                    model.addColumn("Published");
+                    model.addColumn("Language");
+                    model.addColumn("Pages");
+                    model.addColumn("Quantity");
+                    while( result.next() ){
+                        model.addRow( new Object[] { result.getString(1),result.getString(2),result.getString(3),result.getString(4),result.getString(5),result.getString(6),result.getString(7),result.getString(8)});
+                    }
+                    JTable tb = new JTable(model);
+                    JScrollPane sp = new JScrollPane(tb);
+                    frame.add(sp);
+                    frame.setSize(1200, 500);
+                    frame.setVisible(true);
+                    frame.setLocationRelativeTo(null);
+                } catch (SQLException e){
+                    JOptionPane.showMessageDialog(null,e);
+                }
+            }
+        });
         add.setBounds(25, 60, 120, 25);
         add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
