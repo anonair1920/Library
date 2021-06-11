@@ -51,7 +51,7 @@ public class Main {
                             while (result.next()) {
                                 String type = result.getString("admin");
                                 String userID = result.getString("id");
-                                if (type.equals("0")) {
+                                if (type.equals("1")) {
                                     AdminView.main();
                                 } else {
                                     UserView.main(userID);

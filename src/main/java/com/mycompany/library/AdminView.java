@@ -22,7 +22,7 @@ public class AdminView {
                 JFrame frame = new JFrame("Users List");
                 // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 Connection connection = Main.connect();
-                String query = "SELECT * FROM users WHERE admin = 1;";
+                String query = "SELECT DISTINCT users.id, users.username, users.email, users.password FROM users WHERE admin = 0;";
                 try {
                     Statement statement = connection.createStatement();
                     statement.executeUpdate("USE lib;");
@@ -31,11 +31,11 @@ public class AdminView {
                     DefaultTableModel model = new DefaultTableModel();
                     model.addColumn("User ID");
                     model.addColumn("Name");
-                    model.addColumn("Password");
                     model.addColumn("Email");
+                    model.addColumn("Password");
                     while (result.next()) {
-                        model.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3),
-                                result.getString(5) });
+                        model.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(4),
+                                result.getString(3) });
                     }
                     JTable usersList = new JTable(model);
                     JScrollPane scrollPane = new JScrollPane(usersList);
@@ -64,14 +64,14 @@ public class AdminView {
                 JTextField mail = new JTextField();
                 mail.setBounds(110, 85, 200, 30);
                 JRadioButton u1 = new JRadioButton("Admin");
-                u1.setBounds(55, 115, 200, 30);
+                u1.setBounds(110, 115, 70, 30);
                 JRadioButton u2 = new JRadioButton("User");
-                u2.setBounds(110, 110, 200, 30);
+                u2.setBounds(200, 115, 70, 30);
                 ButtonGroup btngr = new ButtonGroup();
                 btngr.add(u1);
                 btngr.add(u2);
                 JButton btn = new JButton("CREATE");
-                btn.setBounds(130, 195, 80, 25);
+                btn.setBounds(130, 155, 80, 25);
                 btn.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent event) {
                         String username = user.getText();
@@ -80,30 +80,31 @@ public class AdminView {
                         Boolean admin = false;
                         if (u1.isSelected()) {
                             admin = true;
+                        } 
+                            Connection connection = Main.connect();
+                            try {
+                                Statement statement = connection.createStatement();
+                                statement.executeUpdate("USE lib;");
+                                statement.executeUpdate("INSERT INTO users(username, password, email, admin) VALUES('"
+                                        + username + "','" + password + "','" + email + "'," + admin + ");");
+                                JOptionPane.showMessageDialog(null, "User added!");
+                                System.out.println("Added new user!"+admin);
+                                frame.dispose();
+                            } catch (SQLException e) {
+                                JOptionPane.showMessageDialog(null, e);
+                            }
                         }
-                        Connection connection = Main.connect();
-                        try {
-                            Statement statement = connection.createStatement();
-                            statement.executeUpdate("USE lib;");
-                            statement.executeUpdate("INSERT INTO users(username, password, email, admin) VALUES('"+username+"','"+password+"','"+email+"',"+admin+");");
-                            JOptionPane.showMessageDialog(null, "User added!");
-                            System.out.println("Added new user!");
-                            frame.dispose();
-                        } catch (SQLException e) {
-                            JOptionPane.showMessageDialog(null, e);
-                        }
-                    }
                 });
+                frame.add(btn);
+                frame.add(u2);
+                frame.add(u1);
                 frame.add(l1);
                 frame.add(l2);
                 frame.add(l3);
-                frame.add(u1);
-                frame.add(u2);
                 frame.add(user);
                 frame.add(pass);
                 frame.add(mail);
-                frame.add(btn);
-                frame.setSize(355, 280);
+                frame.setSize(355, 240);
                 frame.setLayout(null);
                 frame.setVisible(true);
                 frame.setLocationRelativeTo(null);
