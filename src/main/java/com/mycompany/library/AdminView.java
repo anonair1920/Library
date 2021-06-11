@@ -10,7 +10,7 @@ import java.sql.*;
 public class AdminView {
     public static void main() {
         JFrame frame = new JFrame("Admin View");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JButton view = new JButton("View Users");
         JButton add = new JButton("Add User");
         JButton update = new JButton("Update User");
@@ -112,6 +112,62 @@ public class AdminView {
         });
         add.setBounds(20, 60, 120, 25);
         update.setBounds(150, 20, 120, 25);
+        update.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent event){
+                JFrame frame = new JFrame("Update user informations");
+                JLabel l1 = new JLabel("New Username");
+                JLabel l2 = new JLabel("New Password");
+                JLabel l3 = new JLabel("New Email");
+                JLabel l4 = new JLabel("userID");
+                JTextField t1 = new JTextField("");
+                JTextField t2 = new JTextField("");
+                JTextField t3 = new JTextField("");
+                JTextField t4 = new JTextField("");
+                JButton btn = new JButton("SUBMIT");
+                l1.setBounds(30, 50, 140, 30);
+                l2.setBounds(30, 85, 140, 30);
+                l3.setBounds(30, 120, 140, 30);
+                l4.setBounds(30, 15, 140, 30);
+                t1.setBounds(172, 50, 180, 30);
+                t2.setBounds(172, 85, 180, 30);
+                t3.setBounds(172, 120, 180, 30);
+                t4.setBounds(172, 15, 180, 30);
+                btn.setBounds(150, 175, 80, 30);
+                btn.addActionListener( new ActionListener() {
+                    public void actionPerformed(ActionEvent event){
+                        String id = t4.getText();
+                        String username = t1.getText();
+                        String password = t2.getText();
+                        String email = t3.getText();
+                        Connection connection = Main.connect();
+                        try {
+                            Statement st = connection.createStatement();
+                            st.executeUpdate("USE lib;");
+                            st.executeUpdate("UPDATE users SET username = '" + username + "', password = '"+password+"',email = '"+email+"' WHERE id = "+id+";");
+                            JOptionPane.showMessageDialog(null, "Data Updated!");
+                            System.out.println("Update database!");
+                            frame.dispose();
+                        } catch (SQLException e) {
+                            JOptionPane.showMessageDialog(null, e);
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                frame.add(l1);
+                frame.add(l2);
+                frame.add(l3);
+                frame.add(l4);
+                frame.add(t1);
+                frame.add(t2);
+                frame.add(t3);
+                frame.add(t4);
+                frame.add(btn);
+                frame.setSize(400,250);
+                frame.setLayout(null);
+                frame.setVisible(true);
+                frame.setLocationRelativeTo(null);
+            }
+        });
         delete.setBounds(150, 60, 120, 25);
         logout.setBounds(20, 100, 250, 25);
         logout.addActionListener(new ActionListener() {
