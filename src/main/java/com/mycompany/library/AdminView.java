@@ -48,6 +48,7 @@ public class AdminView {
                 }
             }
         });
+        add.setBounds(20, 60, 120, 25);
         add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JFrame frame = new JFrame("Enter User Details");
@@ -110,7 +111,6 @@ public class AdminView {
                 frame.setLocationRelativeTo(null);
             }
         });
-        add.setBounds(20, 60, 120, 25);
         update.setBounds(150, 20, 120, 25);
         update.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent event){
@@ -169,6 +169,43 @@ public class AdminView {
             }
         });
         delete.setBounds(150, 60, 120, 25);
+        delete.addActionListener( new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+                JFrame frame = new JFrame("Delete user by ID");
+                JLabel l = new JLabel("User ID");
+                JTextField t = new JTextField();
+                JButton btn = new JButton("DELETE");
+                l.setBounds(30, 20, 70, 25);
+                t.setBounds(105, 20, 160, 25);
+                btn.setBounds(115, 80, 80, 25);
+                btn.addActionListener( new ActionListener(){
+                    public void actionPerformed(ActionEvent event){
+                        String id = t.getText();
+                        Connection connection = Main.connect();
+                        try {
+                            Statement statement = connection.createStatement();
+                            statement.executeUpdate("USE lib;");
+                            statement.executeUpdate("DELETE FROM users WHERE id = " + id + ";");
+                            System.out.println("passed!");
+                            System.out.println("DELETE FROM users WHERE id = " + id + ";");
+                            JOptionPane.showMessageDialog(null, "User is removed from data!");
+                            System.out.println("Deleted!");
+                            frame.dispose();
+                        } catch (SQLException e) {
+                            JOptionPane.showMessageDialog(null, e);
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                frame.add(l);
+                frame.add(t);
+                frame.add(btn);
+                frame.setSize(320, 180);
+                frame.setLayout(null);
+                frame.setVisible(true);
+                frame.setLocationRelativeTo(null);
+            }
+        });
         logout.setBounds(20, 100, 250, 25);
         logout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
