@@ -138,6 +138,146 @@ public class UserView {
         });
         available.setBounds(285, 20, 140, 25);
         update.setBounds(435, 20, 120, 25);
+        update.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                JFrame frame = new JFrame("Enter details");
+                JLabel l1 = new JLabel("Book ID");
+                JLabel l2 = new JLabel("Book Title");
+                JLabel l3 = new JLabel("Book Quantity");
+                JTextField t1 = new JTextField();
+                JTextField t2 = new JTextField();
+                JTextField t3 = new JTextField();
+                JButton more = new JButton("More");
+                JButton submit = new JButton("Submit");
+                l1.setBounds(30, 20, 100, 25);
+                l2.setBounds(30, 60, 100, 25);
+                l3.setBounds(30, 100, 100, 25);
+                t1.setBounds(130, 20, 120, 25);
+                t2.setBounds(130, 60, 120, 25);
+                t3.setBounds(130, 100, 120, 25);
+                more.setBounds(50, 150, 80, 25);
+                submit.setBounds(150, 150, 80, 25);
+                more.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent event) {
+                        JFrame frame = new JFrame("Update more information");
+                        JLabel l1 = new JLabel("Book Title");
+                        JLabel l2 = new JLabel("Author");
+                        JLabel l3 = new JLabel("Genre");
+                        JLabel l4 = new JLabel("Pulished");
+                        JLabel l5 = new JLabel("Language");
+                        JLabel l6 = new JLabel("Total Pages");
+                        JLabel l7 = new JLabel("Quantity");
+                        JLabel l8 = new JLabel("Book ID");
+                        JTextField t1 = new JTextField();
+                        JTextField t2 = new JTextField();
+                        JTextField t3 = new JTextField();
+                        JTextField t4 = new JTextField();
+                        JTextField t5 = new JTextField();
+                        JTextField t6 = new JTextField();
+                        JTextField t7 = new JTextField();
+                        JTextField t8 = new JTextField();
+                        JButton submit = new JButton("Submit");
+                        l1.setBounds(30, 20, 100, 25);
+                        l2.setBounds(30, 60, 100, 25);
+                        l3.setBounds(30, 100, 100, 25);
+                        l4.setBounds(30, 140, 100, 25);
+                        l5.setBounds(30, 180, 100, 25);
+                        l6.setBounds(30, 220, 100, 25);
+                        l7.setBounds(30, 260, 100, 25);
+                        l8.setBounds(30, 300, 100, 25);
+                        t1.setBounds(130, 20, 150, 25);
+                        t2.setBounds(130, 60, 150, 25);
+                        t3.setBounds(130, 100, 150, 25);
+                        t4.setBounds(130, 140, 150, 25);
+                        t5.setBounds(130, 180, 150, 25);
+                        t6.setBounds(130, 220, 150, 25);
+                        t7.setBounds(130, 260, 150, 25);
+                        t8.setBounds(130, 300, 150, 25);
+                        submit.setBounds(120, 350, 80, 25);
+                        submit.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent event) {
+                                String s1 = t1.getText();
+                                String s2 = t2.getText();
+                                String s3 = t3.getText();
+                                String s4 = t4.getText();
+                                String s5 = t5.getText();
+                                String s6 = t6.getText();
+                                String s7 = t7.getText();
+                                String id = t8.getText();
+                                String query = "UPDATE books SET title = '" + s1 + "', author = '" + s2 + "', genre = '"
+                                        + s3 + "', published = '" + s4 + "', language = '" + s5 + "', pages = " + s6
+                                        + ", quantity = " + s7 + " WHERE id = " + id + " ;";
+                                Connection connection = Main.connect();
+                                try {
+                                    Statement statement = connection.createStatement();
+                                    statement.executeUpdate("USE lib;");
+                                    statement.executeUpdate(query);
+                                    JOptionPane.showMessageDialog(null, "Book updated!");
+                                    System.out.println("Updated book!");
+                                    frame.dispose();
+                                } catch (SQLException e) {
+                                    JOptionPane.showMessageDialog(null, e);
+                                }
+                            }
+                        });
+                        frame.add(l1);
+                        frame.add(l2);
+                        frame.add(l3);
+                        frame.add(l4);
+                        frame.add(l5);
+                        frame.add(l6);
+                        frame.add(l7);
+                        frame.add(l8);
+                        frame.add(t1);
+                        frame.add(t2);
+                        frame.add(t3);
+                        frame.add(t4);
+                        frame.add(t5);
+                        frame.add(t6);
+                        frame.add(t7);
+                        frame.add(t8);
+                        frame.add(submit);
+                        frame.setSize(330, 430);
+                        frame.setLayout(null);
+                        frame.setVisible(true);
+                        frame.setLocationRelativeTo(null);
+
+                    }
+                });
+                submit.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent event) {
+                        String s1 = t1.getText();
+                        String s2 = t2.getText();
+                        String s3 = t3.getText();
+                        String query = "UPDATE books SET title = '" + s2 + "', quantity = " + s3 + " WHERE id = " + s1
+                                + ";";
+                        Connection connection = Main.connect();
+                        try {
+                            Statement st = connection.createStatement();
+                            st.executeUpdate("USE lib;");
+                            st.executeUpdate(query);
+                            JOptionPane.showMessageDialog(null, "Update successfully!");
+                            frame.dispose();
+                        } catch (SQLException e) {
+                            JOptionPane.showMessageDialog(null, e);
+                        }
+                    }
+                });
+                frame.dispose();
+                frame.add(l1);
+                frame.add(l2);
+                frame.add(l3);
+                frame.add(t1);
+                frame.add(t2);
+                frame.add(t3);
+                frame.add(more);
+                frame.add(submit);
+                frame.setSize(300, 230);
+                frame.setLayout(null);
+                frame.setVisible(true);
+                frame.setLocationRelativeTo(null);
+            }
+        });
         issue.setBounds(155, 60, 120, 25);
         issue.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
@@ -206,7 +346,6 @@ public class UserView {
         issued.setBounds(155, 20, 120, 25);
         returnBook.setBounds(285, 60, 140, 25);
         logout.setBounds(435, 60, 120, 25);
-
         logout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 frame.dispose();
