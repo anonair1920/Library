@@ -209,25 +209,11 @@ public class AdminView {
         logout.setBounds(20, 100, 250, 25);
         logout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                Connection connection = Main.connect();
-                try {
-                    Statement statement = connection.createStatement();
-                    statement.executeUpdate("USE library"); // use database with the name
-                    frame.dispose();
-                } catch (SQLException e) {
-                    JOptionPane.showMessageDialog(null, e);
-                }
+               frame.dispose();
+               Main.login();
             }
         });
-        // view user
-
-        // Add a user
-
-        // Update user info
-
-        // Delete user
-
-        // Logout
+        frame.dispose();
         frame.add(view);
         frame.add(add);
         frame.add(update);

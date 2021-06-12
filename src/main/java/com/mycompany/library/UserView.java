@@ -352,16 +352,7 @@ public class UserView {
                 Main.login();
             }
         });
-        // Search book, author, genre
-
-        // Add book
-
-        // View All Books
-
-        // View Issued Books
-
-        // Logout
-
+        frame.dispose();
         frame.add(searchBox);
         frame.add(add);
         frame.add(all);
