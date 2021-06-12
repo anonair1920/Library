@@ -10,7 +10,6 @@ import java.sql.*;
 public class AdminView {
     public static void main() {
         JFrame frame = new JFrame("Admin View");
-        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JButton view = new JButton("View Users");
         JButton add = new JButton("Add User");
         JButton update = new JButton("Update User");

@@ -3,12 +3,18 @@ package com.mycompany.library;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import com.mycompany.library.Main.ex;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 public class UserView {
     public static void main(String userID) {
@@ -22,6 +28,7 @@ public class UserView {
         JButton issue = new JButton("Issue Book");
         JButton returnBook = new JButton("Return Book");
         JButton logout = new JButton("Log out");
+        JButton delete = new JButton("Delete Book");
         all.setBounds(25, 20, 120, 25);
         all.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
@@ -99,14 +106,16 @@ public class UserView {
                         String published = t5.getText();
                         String pages = t6.getText();
                         String quantity = t7.getText();
+                        String query = "INSERT INTO books(title, author, genre, language, published, pages, quantity) VALUES('"
+                                + title + "','" + author + "','" + genre + "','" + language + "','" + published + "',"
+                                + pages + "," + quantity + ")";
+                        String autoUpdate = "UPDATE books SET available = " + quantity + ", issued = 0 WHERE title = '"
+                                + title + "';";
                         Connection connection = Main.connect();
                         try {
                             Statement statement = connection.createStatement();
-                            statement.executeUpdate("USE lib;");
-                            statement.executeUpdate(
-                                    "INSERT INTO books(title, author, genre, language, published, pages, quantity) VALUES('"
-                                            + title + "','" + author + "','" + genre + "','" + language + "','"
-                                            + published + "'," + pages + "," + quantity + ")");
+                            statement.executeUpdate(query);
+                            statement.executeUpdate(autoUpdate);
                             JOptionPane.showMessageDialog(null, "Book added!");
                             System.out.println("Added new book!");
                             frame.dispose();
@@ -254,7 +263,6 @@ public class UserView {
                         Connection connection = Main.connect();
                         try {
                             Statement st = connection.createStatement();
-                            st.executeUpdate("USE lib;");
                             st.executeUpdate(query);
                             JOptionPane.showMessageDialog(null, "Update successfully!");
                             frame.dispose();
@@ -344,12 +352,152 @@ public class UserView {
             }
         });
         issued.setBounds(155, 20, 120, 25);
+        issued.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                JFrame frame = new JFrame("Issued books");
+                Connection connection = Main.connect();
+                String query = "SELECT DISTINCT issued.*, books.title FROM issued, books WHERE issued.bookID = books.id;";
+                try {
+                    Statement statement = connection.createStatement();
+                    ResultSet rs = statement.executeQuery(query);
+                    DefaultTableModel model = new DefaultTableModel();
+                    model.addColumn("Issue ID");
+                    model.addColumn("Student Name");
+                    model.addColumn("Book Title");
+                    model.addColumn("BookID");
+                    model.addColumn("Issued Date");
+                    model.addColumn("Period");
+                    while (rs.next()) {
+                        model.addRow(new Object[] { rs.getString(1), rs.getString(3), rs.getString(9), rs.getString(2),
+                                rs.getString(6), rs.getString(7) });
+                    }
+                    JTable table = new JTable(model);
+                    JScrollPane scrollPane = new JScrollPane(table);
+                    frame.add(scrollPane);
+                    frame.setSize(1200, 600);
+                    frame.setVisible(true);
+                    frame.setLayout(null);
+                    frame.setLocationRelativeTo(null);
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(null, e);
+                }
+            }
+        });
         returnBook.setBounds(285, 60, 140, 25);
+        returnBook.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                JFrame frame = new JFrame("Enter Details");
+                JLabel l1 = new JLabel("Student ID");
+                JLabel l2 = new JLabel("Book ID");
+                JLabel l3 = new JLabel("Return Date");
+                JTextField t1 = new JTextField();
+                JTextField t2 = new JTextField();
+                JTextField t3 = new JTextField();
+                JButton btn = new JButton("Return");
+                l1.setBounds(30, 20, 100, 25);
+                l2.setBounds(30, 60, 100, 25);
+                l3.setBounds(30, 100, 100, 25);
+                t1.setBounds(130, 20, 120, 25);
+                t2.setBounds(130, 60, 120, 25);
+                t3.setBounds(130, 100, 120, 25);
+                btn.setBounds(100, 145, 80, 25);
+                btn.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent event) {
+                        String studentID = t1.getText();
+                        String bookID = t2.getText();
+                        String returnDate = t3.getText();
+                        String query = "SELECT issuedDate FROM issued WHERE id IN (SELECT DISTINCT issued.id FROM issued WHERE studentID = "
+                                + studentID + " AND bookID = " + bookID + ");";
+                        String updateReturnDate = "UPDATE issued SET returnDate = '"+returnDate+"' WHERE studentID = "
+                                + studentID + " AND bookID = " + bookID + ";";
+                        String getPeriod = "SELECT DISTINCT issued.period FROM issued WHERE id IN (SELECT DISTINCT issued.id FROM issued WHERE studentID = "
+                                + studentID + " AND bookID = " + bookID + ");";
+                        Connection connection = Main.connect();
+                        try {
+                            Statement statement = connection.createStatement();
+                            String date1 = "";
+                            String date2 = returnDate;
+                            ResultSet rs = statement.executeQuery(query);
+                            while (rs.next()) {
+                                date1 = rs.getString(1);
+                            }
+                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            LocalDate d1 = LocalDate.parse(date1, dtf);
+                            LocalDate d2 = LocalDate.parse(date2, dtf);
+                            long dif = Duration.between(d1.atStartOfDay(), d2.atStartOfDay()).toDays();
+                            ex.days = (int) (TimeUnit.DAYS.convert(dif, TimeUnit.DAYS));
+                            statement.executeUpdate(updateReturnDate);
+                            frame.dispose();
+                            ResultSet result = statement.executeQuery(getPeriod);
+                            String period;
+                            while(result.next()){
+                                period = result.getString(1);
+                                int i = Integer.parseInt(period);
+                                int diff = (int) dif;
+                                if ( i < diff ){
+                                    int fine = (diff - i)*2;
+                                    JOptionPane.showMessageDialog(null, "Fine:   $" + fine);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Book returned!");
+                                }
+                            }
+                        } catch (SQLException e) {
+                            JOptionPane.showMessageDialog(null, e);
+                        }
+                    }
+                });
+                frame.add(l1);
+                frame.add(l2);
+                frame.add(l3);
+                frame.add(t1);
+                frame.add(t2);
+                frame.add(t3);
+                frame.add(btn);
+                frame.setSize(280, 230);
+                frame.setLayout(null);
+                frame.setVisible(true);
+                frame.setLocationRelativeTo(null);
+            }
+        });
         logout.setBounds(435, 60, 120, 25);
         logout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 frame.dispose();
                 Main.login();
+            }
+        });
+        delete.setBounds(25, 100, 120, 25);
+        delete.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                JFrame frame = new JFrame("Delete by ID");
+                JLabel label = new JLabel("Book ID");
+                JTextField textField = new JTextField();
+                JButton btn = new JButton("Delete");
+                label.setBounds(30, 25, 70, 25);
+                textField.setBounds(100, 25, 70, 25);
+                btn.setBounds(60, 65, 80, 25);
+                btn.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent event) {
+                        String id = textField.getText();
+                        Connection connection = Main.connect();
+                        try {
+                            Statement statement = connection.createStatement();
+                            statement.executeUpdate("USE lib;");
+                            statement.executeUpdate("DELETE FROM books WHERE id =" + id);
+                            JOptionPane.showMessageDialog(null, "Book is removed from Library!");
+                            frame.dispose();
+                        } catch (SQLException e) {
+                            JOptionPane.showMessageDialog(null, e);
+                        }
+                    }
+                });
+                frame.add(label);
+                frame.add(textField);
+                frame.add(btn);
+                frame.setSize(220, 140);
+                frame.setLayout(null);
+                frame.setVisible(true);
+                frame.setLocationRelativeTo(null);
             }
         });
         frame.dispose();
@@ -362,7 +510,8 @@ public class UserView {
         frame.add(issue);
         frame.add(returnBook);
         frame.add(logout);
-        frame.setSize(600, 150);
+        frame.add(delete);
+        frame.setSize(600, 200);
         frame.setLayout(null);
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);

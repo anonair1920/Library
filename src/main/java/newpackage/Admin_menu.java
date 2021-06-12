@@ -402,15 +402,6 @@ public class Admin_menu {
                                     JOptionPane.showMessageDialog(null, "Book returned!");
                                 }
                             }
-                            // int diff_int = Integer.parseInt(diff);
-                            // Calculate fine
-                            // if ( ex.days&amp;gt;diff_int ) {
-                            // int fine = (ex.days-diff_int)*10;
-                            // statement1.executeUpdate("UPDATE issued SET fine = " + fine + "WHERE issue_id
-                            // = " + issue_id );
-                            // String fine_str = ("Fine: " + fine);
-                            // JOptionPane.showMessageDialog(null, fine_str);
-                            // }
                         } catch (SQLException e) {
                             JOptionPane.showMessageDialog(null, e);
                         }

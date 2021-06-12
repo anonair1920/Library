@@ -90,8 +90,11 @@ public class Main {
         return null;
     }
 
-    public static void logout(){
+    public static void logout() {
         login();
     }
 
+    public static class ex {
+        public static int days = 0;
+    }
 }
