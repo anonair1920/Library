@@ -184,6 +184,37 @@ public class UserView {
             }
         });
         available.setBounds(285, 70, 140, 25);
+        available.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event){
+                JFrame frame = new JFrame("Available Books");
+                Connection connection = Main.connect();
+                String query = "SELECT * FROM books WHERE available > 0";
+                try {
+                    Statement statement = connection.createStatement();
+                    ResultSet rs = statement.executeQuery(query);
+                    DefaultTableModel model = new DefaultTableModel();
+                    model.addColumn("Issue ID");
+                    model.addColumn("Student Name");
+                    model.addColumn("Book Title");
+                    model.addColumn("BookID");
+                    model.addColumn("Issued Date");
+                    model.addColumn("Period");
+                    while (rs.next()) {
+                        model.addRow(new Object[] { rs.getString(1), rs.getString(3), rs.getString(9), rs.getString(2),
+                                rs.getString(6), rs.getString(7) });
+                    }
+                    JTable table = new JTable(model);
+                    JScrollPane scrollPane = new JScrollPane(table);
+                    frame.add(scrollPane);
+                    frame.setSize(1200, 600);
+                    frame.setVisible(true);
+                    frame.setLayout(null);
+                    frame.setLocationRelativeTo(null);
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(null, e);
+                }
+            }
+        });
         update.setBounds(435, 70, 120, 25);
         update.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
