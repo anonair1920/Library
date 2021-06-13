@@ -7,6 +7,7 @@ import com.mycompany.library.Main.ex;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.Thread.State;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +20,8 @@ import java.util.concurrent.TimeUnit;
 public class UserView {
     public static void main(String userID) {
         JFrame frame = new JFrame("User View");
-        JTextField searchBox = new JTextField();
+        JTextField searchBox = new JTextField("The Little Prince?");
+        JButton search = new JButton("Search");
         JButton all = new JButton("All Books");
         JButton add = new JButton("Add Book");
         JButton available = new JButton("Available Books");
@@ -29,7 +31,43 @@ public class UserView {
         JButton returnBook = new JButton("Return Book");
         JButton logout = new JButton("Log out");
         JButton delete = new JButton("Delete Book");
-        all.setBounds(25, 20, 120, 25);
+        searchBox.setBounds(25, 20, 400, 25);
+        search.setBounds(435, 20, 120, 25);
+        search.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                JFrame frame = new JFrame("Result from search");
+                String keyword = searchBox.getText();
+                String query = "SELECT * FROM books WHERE title = '" + keyword + "';";
+                Connection connection = Main.connect();
+                try {
+                    Statement statement = connection.createStatement();
+                    ResultSet result = statement.executeQuery(query);
+                    DefaultTableModel model = new DefaultTableModel();
+                    model.addColumn("ID");
+                    model.addColumn("Title");
+                    model.addColumn("Author");
+                    model.addColumn("Genre");
+                    model.addColumn("Published");
+                    model.addColumn("Language");
+                    model.addColumn("Pages");
+                    model.addColumn("Quantity");
+                    while (result.next()) {
+                        model.addRow(new Object[] { result.getString(1), result.getString(2), result.getString(3),
+                                result.getString(4), result.getString(5), result.getString(6), result.getString(7),
+                                result.getString(8) });
+                    }
+                    JTable tb = new JTable(model);
+                    JScrollPane sp = new JScrollPane(tb);
+                    frame.add(sp);
+                    frame.setSize(1200, 500);
+                    frame.setVisible(true);
+                    frame.setLocationRelativeTo(null);
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(null, e);
+                }
+            }
+        });
+        all.setBounds(25, 70, 120, 25);
         all.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JFrame frame = new JFrame("Library");
@@ -63,7 +101,7 @@ public class UserView {
                 }
             }
         });
-        add.setBounds(25, 60, 120, 25);
+        add.setBounds(25, 110, 120, 25);
         add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JFrame frame = new JFrame("Add Book Details");
@@ -145,8 +183,8 @@ public class UserView {
                 frame.setLocationRelativeTo(null);
             }
         });
-        available.setBounds(285, 20, 140, 25);
-        update.setBounds(435, 20, 120, 25);
+        available.setBounds(285, 70, 140, 25);
+        update.setBounds(435, 70, 120, 25);
         update.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JFrame frame = new JFrame("Enter details");
@@ -286,7 +324,7 @@ public class UserView {
                 frame.setLocationRelativeTo(null);
             }
         });
-        issue.setBounds(155, 60, 120, 25);
+        issue.setBounds(155, 70, 120, 25);
         issue.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JFrame frame = new JFrame("Issue a book");
@@ -351,7 +389,7 @@ public class UserView {
                 frame.setLocationRelativeTo(null);
             }
         });
-        issued.setBounds(155, 20, 120, 25);
+        issued.setBounds(155, 110, 120, 25);
         issued.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JFrame frame = new JFrame("Issued books");
@@ -383,7 +421,7 @@ public class UserView {
                 }
             }
         });
-        returnBook.setBounds(285, 60, 140, 25);
+        returnBook.setBounds(285, 110, 140, 25);
         returnBook.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JFrame frame = new JFrame("Enter Details");
@@ -408,8 +446,8 @@ public class UserView {
                         String returnDate = t3.getText();
                         String query = "SELECT issuedDate FROM issued WHERE id IN (SELECT DISTINCT issued.id FROM issued WHERE studentID = "
                                 + studentID + " AND bookID = " + bookID + ");";
-                        String updateReturnDate = "UPDATE issued SET returnDate = '"+returnDate+"' WHERE studentID = "
-                                + studentID + " AND bookID = " + bookID + ";";
+                        String updateReturnDate = "UPDATE issued SET returnDate = '" + returnDate
+                                + "' WHERE studentID = " + studentID + " AND bookID = " + bookID + ";";
                         String getPeriod = "SELECT DISTINCT issued.period FROM issued WHERE id IN (SELECT DISTINCT issued.id FROM issued WHERE studentID = "
                                 + studentID + " AND bookID = " + bookID + ");";
                         Connection connection = Main.connect();
@@ -430,12 +468,12 @@ public class UserView {
                             frame.dispose();
                             ResultSet result = statement.executeQuery(getPeriod);
                             String period;
-                            while(result.next()){
+                            while (result.next()) {
                                 period = result.getString(1);
                                 int i = Integer.parseInt(period);
                                 int diff = (int) dif;
-                                if ( i < diff ){
-                                    int fine = (diff - i)*2;
+                                if (i < diff) {
+                                    int fine = (diff - i) * 2;
                                     JOptionPane.showMessageDialog(null, "Fine:   $" + fine);
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Book returned!");
@@ -459,14 +497,14 @@ public class UserView {
                 frame.setLocationRelativeTo(null);
             }
         });
-        logout.setBounds(435, 60, 120, 25);
+        logout.setBounds(435, 110, 120, 25);
         logout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 frame.dispose();
                 Main.login();
             }
         });
-        delete.setBounds(25, 100, 120, 25);
+        delete.setBounds(25, 110, 120, 25);
         delete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JFrame frame = new JFrame("Delete by ID");
@@ -502,6 +540,7 @@ public class UserView {
         });
         frame.dispose();
         frame.add(searchBox);
+        frame.add(search);
         frame.add(add);
         frame.add(all);
         frame.add(available);
