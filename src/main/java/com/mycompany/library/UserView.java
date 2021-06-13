@@ -3,11 +3,13 @@ package com.mycompany.library;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import java.awt.Desktop;
 import com.mycompany.library.Main.ex;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.Thread.State;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -185,7 +187,7 @@ public class UserView {
         });
         available.setBounds(285, 70, 140, 25);
         available.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event){
+            public void actionPerformed(ActionEvent event) {
                 JFrame frame = new JFrame("Available Books");
                 Connection connection = Main.connect();
                 String query = "SELECT * FROM books WHERE available > 0";
@@ -431,14 +433,15 @@ public class UserView {
                     ResultSet rs = statement.executeQuery(query);
                     DefaultTableModel model = new DefaultTableModel();
                     model.addColumn("Issue ID");
+                    model.addColumn("Student ID");
                     model.addColumn("Student Name");
                     model.addColumn("Book Title");
                     model.addColumn("BookID");
                     model.addColumn("Issued Date");
                     model.addColumn("Period");
                     while (rs.next()) {
-                        model.addRow(new Object[] { rs.getString(1), rs.getString(3), rs.getString(9), rs.getString(2),
-                                rs.getString(6), rs.getString(7) });
+                        model.addRow(new Object[] { rs.getString(1), rs.getString(4), rs.getString(3), rs.getString(9),
+                                rs.getString(2), rs.getString(6), rs.getString(7) });
                     }
                     JTable table = new JTable(model);
                     JScrollPane scrollPane = new JScrollPane(table);
@@ -505,7 +508,38 @@ public class UserView {
                                 int diff = (int) dif;
                                 if (i < diff) {
                                     int fine = (diff - i) * 2;
-                                    JOptionPane.showMessageDialog(null, "Fine:   $" + fine);
+                                    JFrame frame = new JFrame("Fine form");
+                                    try {
+                                        Statement newStatement = connection.createStatement();
+                                        ResultSet resultSet = newStatement.executeQuery(
+                                                "SELECT * FROM issued WHERE studentID = "
+                                                        + studentID + " AND bookID = " + bookID + ";");
+                                        DefaultTableModel model = new DefaultTableModel();
+                                        model.addColumn("Issue ID");
+                                        model.addColumn("Student ID");
+                                        model.addColumn("Student Name");
+                                        model.addColumn("BookID");
+                                        model.addColumn("Period");
+                                        model.addColumn("Issued Date");
+                                        model.addColumn("Return Date");
+                                        model.addColumn("Fine($)");
+                                        while (resultSet.next()) {
+                                            model.addRow(new Object[] { resultSet.getString(1), resultSet.getString(4),
+                                                    resultSet.getString(3), resultSet.getString(2),
+                                                    resultSet.getString(7), resultSet.getString(6),
+                                                    resultSet.getString(8), fine });
+                                        }
+                                        JTable table = new JTable(model);
+                                        JScrollPane scrollPane = new JScrollPane(table);
+                                        frame.add(scrollPane);
+                                        frame.setSize(1000, 200);
+                                        frame.setVisible(true);
+                                        frame.setLayout(null);
+                                        frame.setLocationRelativeTo(null);
+                                    JOptionPane.showMessageDialog(null, "Book returned with fine!");
+                                    } catch (SQLException e) {
+                                        JOptionPane.showMessageDialog(null, e);
+                                    }
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Book returned!");
                                 }
